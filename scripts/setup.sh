@@ -14,6 +14,10 @@ echo "PORT:     $PORT"
 echo "IMAGE:    $IMAGE"
 echo
 
+# ── 先确认：要不要在这台机器上装 ────────────────────────────────
+read -r -p "确认在当前机器部署 gpt-load 到 $DATA_DIR 吗？输入 yes 继续: " confirm
+[ "$confirm" = "yes" ] || { echo "已取消。"; exit 0; }
+
 # ── 坑一：data 目录属主必须是容器 uid 10001 ─────────────────────
 # securefile 校验 stat.Uid == euid，bind mount 宿主目录（uid 1000）直接 EPERM 崩溃循环。
 # 这里先建目录再 chown，再起容器。

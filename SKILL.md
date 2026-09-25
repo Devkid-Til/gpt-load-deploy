@@ -25,7 +25,7 @@ skill 直接调用这三个脚本，不用重新实现：
 
 ### 1. 起服务
 
-直接调用 `setup.sh`：
+**先问用户**：用 AskUserQuestion 确认——「要在当前机器部署 gpt-load 吗？装到哪个目录？」（默认 `./gpt-load-data`，端口 3001）。用户确认后再调用 `setup.sh`：
 
 ```bash
 # 如果脚本不在当前目录，先克隆本仓库
@@ -36,7 +36,7 @@ fi
 bash scripts/setup.sh
 ```
 
-跑完后确认 `http://localhost:3001` 能打开，从日志或 credentials.txt 里拿到 AUTH_KEY。
+`setup.sh` 内部会先弹确认（yes/no），再拉镜像 `ghcr.io/tbphp/gpt-load:2` 并启动容器。跑完后确认 `http://localhost:3001` 能打开，从日志或 credentials.txt 里拿到 AUTH_KEY。
 
 ### 2. 展示登录 key
 
