@@ -36,13 +36,21 @@ fi
 bash scripts/setup.sh
 ```
 
-`setup.sh` 内部会先弹确认（yes/no），再拉镜像 `ghcr.io/tbphp/gpt-load:2` 并启动容器。跑完后确认 `http://localhost:3001` 能打开，从日志或 credentials.txt 里拿到 AUTH_KEY。
+`setup.sh` 内部会先弹确认（yes/no），再拉镜像 `ghcr.io/tbphp/gpt-load:2` 并启动容器。跑完后确认 `http://localhost:3001` 能打开。
 
 ### 2. 展示登录 key
 
-把 AUTH_KEY 展示给用户，告诉用户：
+**管理密钥是 gpt-load 首次启动自动生成的**，位置 `${DATA_DIR}/auth.key`（容器内 `/app/data/auth.key`）。读取并展示给用户：
 
-> 管理 UI 在 http://localhost:3001，用这个 key 登录。key 已存到 credentials.txt（权限 600），别提交到任何版本库。
+```bash
+docker exec gpt-load cat /app/data/auth.key
+```
+
+告诉用户：
+
+> 管理 UI 在 http://localhost:3001，用这把密钥登录。它由 gpt-load 首次启动自动生成、存在 `data/auth.key`——这是唯一的副本，丢了要重置，别提交到任何版本库。想自己指定密钥的话，可以在启动前设 `AUTH_KEY` 环境变量。
+
+顺带提醒：同目录还有 `encryption.key`（用于加密存储上游凭据），同样要保管好。
 
 ### 3. 问用户要必要信息
 

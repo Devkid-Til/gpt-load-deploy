@@ -62,8 +62,21 @@ sleep 5
 if curl -sf --max-time 10 "http://localhost:${PORT}/health" >/dev/null 2>&1; then
   echo "✓ gpt-load 已启动，健康检查通过"
   echo
-  echo "管理 UI:  http://localhost:${PORT}"
-  echo "首次登录用 AUTH_KEY（见 credentials.txt，权限 600）"
+  echo "管理 UI: http://localhost:${PORT}"
+  echo
+  # 首次启动时 gpt-load 会自动生成管理密钥，落到 ${DATA_DIR}/auth.key。
+  # 也可以启动前显式设 AUTH_KEY 环境变量覆盖（那就不会生成这个文件）。
+  echo "管理密钥（首次启动自动生成）："
+  KEY="$(docker exec gpt-load cat /app/data/auth.key 2>/dev/null | tr -d '\n')"
+  if [ -n "$KEY" ]; then
+    echo "  $KEY"
+    echo
+    echo "  上面这把就是登录管理 UI 的密钥。想留存请自行写入一个 600 权限的文件，"
+    echo "  勿提交到任何版本库。之后也可随时取："
+    echo "    docker exec gpt-load cat /app/data/auth.key"
+  else
+    echo "  读不到 /app/data/auth.key —— 确认你是否在启动前设了 AUTH_KEY 环境变量覆盖。"
+  fi
 else
   echo "✗ 健康检查未通过，查看日志：docker logs gpt-load --tail 30"
   exit 1

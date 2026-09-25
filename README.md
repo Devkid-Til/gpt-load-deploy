@@ -40,7 +40,15 @@ bash scripts/setup.sh                    # 默认 ./gpt-load-data + 3001 端口
 bash scripts/setup.sh /path/to/data 3001 # 自定义
 ```
 
-跑完管理 UI 在 `http://localhost:3001`，用 `credentials.txt` 里的 AUTH_KEY 登录。
+**管理密钥是首次启动自动生成的**，gpt-load 会把它写到 `${DATA_DIR}/auth.key`，脚本跑完会直接打印出来。之后也可随时取：
+
+```bash
+docker exec gpt-load cat /app/data/auth.key
+```
+
+> 想自己指定密钥：启动前设 `AUTH_KEY` 环境变量即可（那样就不生成 `auth.key`）。同一个目录还会生成 `encryption.key`——两者都要保管好，泄露等于交出管理权限。
+
+拿到密钥后打开 `http://localhost:3001` 登录管理台。
 
 **2. 建分组**
 
