@@ -30,8 +30,8 @@ skill 直接调用这三个脚本，不用重新实现：
 ```bash
 # 如果脚本不在当前目录，先克隆本仓库
 if [ ! -f scripts/setup.sh ]; then
-  git clone https://github.com/Devkid-Til/gpt-load-deploy.git
-  cd gpt-load-deploy
+  git clone https://github.com/Devkid-Til/gpt-load-deploy-skill.git
+  cd gpt-load-deploy-skill
 fi
 bash scripts/setup.sh
 ```
