@@ -11,12 +11,24 @@ description: 用 Claude Code 的 skill 自动完成 gpt-load 自托管 AI 网关
 
 用户说「装 gpt-load」「部署 AI 网关」「自建大模型网关」时触发。
 
+## 脚本（本仓库根目录）
+
+skill 直接调用这三个脚本，不用重新实现：
+
+| 脚本 | 干什么 | 用法 |
+|---|---|---|
+| `setup.sh` | 一键起 docker 服务（含 data 目录属主修正） | `bash setup.sh [DATA_DIR] [PORT]` |
+| `create-group.sh` | 建分组（含 Idempotency-Key、price_multiplier 必填） | `bash create-group.sh <NAME> <CHANNEL_ID> <BASE_URL>` |
+| `add-models.sh` | 挂模型/设别名（先读清单再确认全量替换） | `bash add-models.sh <GROUP_ID> '<JSON_MODELS>'` |
+
 ## 流程
 
 ### 1. 起服务
 
+直接调用 `setup.sh`：
+
 ```bash
-# 如果 setup.sh 在当前目录，直接跑；否则先克隆仓库
+# 如果脚本不在当前目录，先克隆本仓库
 if [ ! -f setup.sh ]; then
   git clone https://github.com/Devkid-Til/gpt-load-deploy.git
   cd gpt-load-deploy
@@ -42,7 +54,7 @@ bash setup.sh
 
 ### 4. 自动建分组 + 挂模型
 
-拿到信息后，跑 create-group.sh 和 add-models.sh：
+拿到信息后，直接调用 `create-group.sh` 和 `add-models.sh`：
 
 ```bash
 export GPT_LOAD_AUTH_KEY="<刚才的 AUTH_KEY>"
@@ -52,7 +64,7 @@ bash create-group.sh kimi-code anthropic https://api.kimi.com/coding
 bash create-group.sh deepseek deepseek https://api.deepseek.com
 bash create-group.sh ollama-local openai_compatible http://<宿主机IP>:11500/v1
 
-# 挂模型（注意全量替换，漏写的会被删）
+# 挂模型（脚本会先读现有清单、确认后再全量替换）
 bash add-models.sh 1 '[{"id":"k3","alias":"k3[1m]","alias_enabled":true}]'
 ```
 
@@ -71,4 +83,4 @@ Dify 容器内用宿主机 IP（`host.docker.internal` 在容器里不解析）�
 
 - **密钥不写进任何版本库**，AUTH_KEY 和 AccessKey 都只展示一次、存 credentials.txt
 - 建分组前确认脚本已可执行（`chmod +x *.sh`）
-- 挂模型前**必须先读现有清单**（add-models.sh 会提示确认），防止全量替换误删
+- 挂模型前脚本会**先读现有清单并提示确认**，防止全量替换误删
