@@ -17,9 +17,9 @@ skill 直接调用这三个脚本，不用重新实现：
 
 | 脚本 | 干什么 | 用法 |
 |---|---|---|
-| `setup.sh` | 一键起 docker 服务（含 data 目录属主修正） | `bash setup.sh [DATA_DIR] [PORT]` |
-| `create-group.sh` | 建分组（含 Idempotency-Key、price_multiplier 必填） | `bash create-group.sh <NAME> <CHANNEL_ID> <BASE_URL>` |
-| `add-models.sh` | 挂模型/设别名（先读清单再确认全量替换） | `bash add-models.sh <GROUP_ID> '<JSON_MODELS>'` |
+| `setup.sh` | 一键起 docker 服务（含 data 目录属主修正） | `bash scripts/setup.sh [DATA_DIR] [PORT]` |
+| `create-group.sh` | 建分组（含 Idempotency-Key、price_multiplier 必填） | `bash scripts/create-group.sh <NAME> <CHANNEL_ID> <BASE_URL>` |
+| `add-models.sh` | 挂模型/设别名（先读清单再确认全量替换） | `bash scripts/add-models.sh <GROUP_ID> '<JSON_MODELS>'` |
 
 ## 流程
 
@@ -29,11 +29,11 @@ skill 直接调用这三个脚本，不用重新实现：
 
 ```bash
 # 如果脚本不在当前目录，先克隆本仓库
-if [ ! -f setup.sh ]; then
+if [ ! -f scripts/setup.sh ]; then
   git clone https://github.com/Devkid-Til/gpt-load-deploy.git
   cd gpt-load-deploy
 fi
-bash setup.sh
+bash scripts/setup.sh
 ```
 
 跑完后确认 `http://localhost:3001` 能打开，从日志或 credentials.txt 里拿到 AUTH_KEY。
@@ -60,12 +60,12 @@ bash setup.sh
 export GPT_LOAD_AUTH_KEY="<刚才的 AUTH_KEY>"
 
 # 按用户选的上游逐个建分组
-bash create-group.sh kimi-code anthropic https://api.kimi.com/coding
-bash create-group.sh deepseek deepseek https://api.deepseek.com
-bash create-group.sh ollama-local openai_compatible http://<宿主机IP>:11500/v1
+bash scripts/create-group.sh kimi-code anthropic https://api.kimi.com/coding
+bash scripts/create-group.sh deepseek deepseek https://api.deepseek.com
+bash scripts/create-group.sh ollama-local openai_compatible http://<宿主机IP>:11500/v1
 
 # 挂模型（脚本会先读现有清单、确认后再全量替换）
-bash add-models.sh 1 '[{"id":"k3","alias":"k3[1m]","alias_enabled":true}]'
+bash scripts/add-models.sh 1 '[{"id":"k3","alias":"k3[1m]","alias_enabled":true}]'
 ```
 
 ### 5. 告诉用户怎么接入

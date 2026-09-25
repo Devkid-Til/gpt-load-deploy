@@ -15,10 +15,10 @@ gpt-load 是 Go 单二进制 + SQLite 的轻量 AI 网关：多渠道多凭据�
 
 ```bash
 # 默认: DATA_DIR=./gpt-load-data, PORT=3001
-bash setup.sh
+bash scripts/setup.sh
 
 # 自定义
-bash setup.sh /path/to/data 3001
+bash scripts/setup.sh /path/to/data 3001
 ```
 
 ### 2. 建分组
@@ -28,20 +28,20 @@ bash setup.sh /path/to/data 3001
 export GPT_LOAD_AUTH_KEY="<你的 AUTH_KEY>"
 
 # 建 Kimi 分组（Anthropic 协议）
-bash create-group.sh kimi-code anthropic https://api.kimi.com/coding
+bash scripts/create-group.sh kimi-code anthropic https://api.kimi.com/coding
 
 # 建 DeepSeek 分组
-bash create-group.sh deepseek deepseek https://api.deepseek.com
+bash scripts/create-group.sh deepseek deepseek https://api.deepseek.com
 
 # 建本地 Ollama 分组
-bash create-group.sh ollama-local openai_compatible http://<宿主机IP>:11500/v1
+bash scripts/create-group.sh ollama-local openai_compatible http://<宿主机IP>:11500/v1
 ```
 
 ### 3. 挂模型 + 设别名
 
 ```bash
 # 注意：这是全量替换，漏写的模型会被删掉，脚本会先提示确认
-bash add-models.sh <GROUP_ID> '[{"id":"k3","alias":"k3[1m]","alias_enabled":true}]'
+bash scripts/add-models.sh <GROUP_ID> '[{"id":"k3","alias":"k3[1m]","alias_enabled":true}]'
 ```
 
 ### 4. 验证
